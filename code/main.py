@@ -53,7 +53,7 @@ def sampling(text_encoder, netG, dataloader,device):
     model_dir = cfg.TRAIN.NET_G
     split_dir = 'valid'
     # Build and load the generator
-    netG.load_state_dict(torch.load('models/%s/netG.pth'%(cfg.CONFIG_NAME)))
+    netG.load_state_dict(torch.load('models/%s/netG.pth'%(cfg.CONFIG_NAME), map_location=torch.device("cuda" if cfg.CUDA else "cpu")))
     netG.eval()
 
     batch_size = cfg.TRAIN.BATCH_SIZE
@@ -141,7 +141,7 @@ def train(dataloader,netG,netD,text_encoder,optimizerG,optimizerD,state_epoch,ba
             out = netD.COND_DNET(features,sent_inter)
             grads = torch.autograd.grad(outputs=out,
                                     inputs=(interpolated,sent_inter),
-                                    grad_outputs=torch.ones(out.size()).cuda(),
+                                    grad_outputs=torch.ones(out.size()),    # TODO: !!!!  removed cuda from here
                                     retain_graph=True,
                                     create_graph=True,
                                     only_inputs=True)
@@ -214,8 +214,9 @@ if __name__ == "__main__":
     output_dir = '../output/%s_%s_%s' % \
         (cfg.DATASET_NAME, cfg.CONFIG_NAME, timestamp)
 
-    torch.cuda.set_device(cfg.GPU_ID)
-    cudnn.benchmark = True
+    if cfg.CUDA:
+        torch.cuda.set_device(cfg.GPU_ID)
+        cudnn.benchmark = True
 
     # Get data loader ##################################################
     imsize = cfg.TREE.BASE_SIZE
@@ -253,16 +254,19 @@ if __name__ == "__main__":
     text_encoder = RNN_ENCODER(dataset.n_words, nhidden=cfg.TEXT.EMBEDDING_DIM)
     state_dict = torch.load(cfg.TEXT.DAMSM_NAME, map_location=lambda storage, loc: storage)
     text_encoder.load_state_dict(state_dict)
-    text_encoder.cuda()
+    if cfg.CUDA:
+        text_encoder.cuda()
 
     for p in text_encoder.parameters():
         p.requires_grad = False
-    text_encoder.eval()    
+    text_encoder.eval()
 
     state_epoch=0
 
     optimizerG = torch.optim.Adam(netG.parameters(), lr=0.0001, betas=(0.0, 0.9))
-    optimizerD = torch.optim.Adam(netD.parameters(), lr=0.0004, betas=(0.0, 0.9))  
+    optimizerD = torch.optim.Adam(netD.parameters(), lr=0.0004, betas=(0.0, 0.9))
+
+    print("Starting........\n\n\n\n\n\n")
 
 
     if cfg.B_VALIDATION:

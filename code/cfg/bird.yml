@@ -2,11 +2,11 @@ CONFIG_NAME: 'bird'
 
 DATASET_NAME: 'birds'
 DATA_DIR: '../data/birds'
-GPU_ID: 0
+GPU_ID: -1
 WORKERS: 1
 
 
-B_VALIDATION: False # True  # False
+B_VALIDATION: True # True  # False
 loss: 'hinge'
 
 TREE:

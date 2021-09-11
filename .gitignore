@@ -1,0 +1,6 @@
+data/*
+*pycache*
+*.zip
+.vscode
+*.pth
+test/*
