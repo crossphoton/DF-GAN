@@ -141,7 +141,7 @@ def train(dataloader,netG,netD,text_encoder,optimizerG,optimizerD,state_epoch,ba
             out = netD.COND_DNET(features,sent_inter)
             grads = torch.autograd.grad(outputs=out,
                                     inputs=(interpolated,sent_inter),
-                                    grad_outputs=torch.ones(out.size()),    # TODO: !!!!  removed cuda from here
+                                    grad_outputs=torch.ones(out.size()).cuda(),
                                     retain_graph=True,
                                     create_graph=True,
                                     only_inputs=True)
