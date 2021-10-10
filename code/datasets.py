@@ -72,10 +72,10 @@ def get_imgs(img_path, imsize, bbox=None,
 
     if transform is not None:
         img = transform(img)
-        
+
     ret = []
     ret.append(normalize(img))
-    #if cfg.GAN.B_DCGAN:
+    # if cfg.GAN.B_DCGAN:
     '''
     for i in range(cfg.TREE.BRANCH_NUM):
         # print(imsize[i])
@@ -304,7 +304,6 @@ class TextDataset(data.Dataset):
         new_sent_ix = index * self.embeddings_num + sent_ix
         caps, cap_len = self.get_caption(new_sent_ix)
         return imgs, caps, cap_len, cls_id, key
-
 
     def __len__(self):
         return len(self.filenames)

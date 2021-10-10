@@ -63,6 +63,7 @@ __C.TEXT.EMBEDDING_DIM = 256
 __C.TEXT.WORDS_NUM = 18
 __C.TEXT.DAMSM_NAME = '../DAMSMencoders/coco/text_encoder200.pth'
 
+
 def _merge_a_into_b(a, b):
     """Merge config dictionary a into config dictionary b, clobbering the
     options in b whenever they are also specified in a.
