@@ -169,7 +169,7 @@ def train(dataloader,netG,netD,text_encoder,optimizerG,optimizerD,state_epoch,ba
                 % (epoch, cfg.TRAIN.MAX_EPOCH, step, len(dataloader), errD.item(), errG.item()))
 
         vutils.save_image(fake.data,
-                        '%s/fake_samples_epoch_%03d.png' % ('imgs/', epoch),
+                        '%s/fake_samples_epoch_%03d.png' % ('imgs', epoch),
                         normalize=True)
 
         if epoch%10==0:
@@ -262,6 +262,7 @@ if __name__ == "__main__":
     text_encoder.eval()
 
     state_epoch=0
+    count=0
 
     optimizerG = torch.optim.Adam(netG.parameters(), lr=0.0001, betas=(0.0, 0.9))
     optimizerD = torch.optim.Adam(netD.parameters(), lr=0.0004, betas=(0.0, 0.9))
@@ -276,6 +277,3 @@ if __name__ == "__main__":
         
         count = train(dataloader,netG,netD,text_encoder,optimizerG,optimizerD, state_epoch,batch_size,device)
 
-
-
-        
