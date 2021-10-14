@@ -177,6 +177,12 @@ def train(dataloader, netG, netD, text_encoder, optimizerG, optimizerD, state_ep
                           normalize=True)
 
         if epoch % 10 == 0:
+            checkpoint = {
+                'epoch': epoch,
+                'optimizerD' : optimizerD.state_dict(),
+                'optimizerG' : optimizerG.state_dict()
+            }
+            torch.save(checkpoint, 'models/%s/optimizers.pth' % (cfg.CONFIG_NAME))
             torch.save(netG.state_dict(), 'models/%s/netG_%03d.pth' %
                        (cfg.CONFIG_NAME, epoch))
             torch.save(netD.state_dict(), 'models/%s/netD_%03d.pth' %
