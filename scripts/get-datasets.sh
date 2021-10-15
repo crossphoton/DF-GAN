@@ -7,9 +7,12 @@ cd data
 # birds
 
 cd birds
-gdown -O temp.tgz --id 1hbzc_P1FuxMkcabkgn9ZKinBwW683j45
-tar -xvzf temp.tgz > /dev/null
-rm temp.tgz
+wget "https://data.deepai.org/CUB200(2011).zip" -O temp.zip
+unzip temp.zip > /dev/null
+rm temp.zip
+rm segmentations.tgz
+tar -xvzf CUB_200_2011.tgz > /dev/null
+rm CUB_200_2011.tgz
 
 
 read -p "Get coco too? [y/n]" -n 1 -r
@@ -23,22 +26,14 @@ fi
 # coco
 
 cd ../coco
-
-wget http://images.cocodataset.org/zips/train2017.zip
-wget http://images.cocodataset.org/zips/val2017.zip
-wget http://images.cocodataset.org/zips/test2017.zip
-wget http://images.cocodataset.org/zips/unlabeled2017.zip
-
 rm -rf train2017 val2017 test2017 unlabeled2017
 
-unzip train2017.zip > /dev/null
-rm train2017.zip
+wget http://images.cocodataset.org/zips/train2014.zip
 
-unzip val2017.zip > /dev/null
-rm val2017.zip
+unzip train2014.zip > /dev/null
+rm train2014.zip
 
-unzip test2017.zip > /dev/null
-rm test2017.zip
+wget http://images.cocodataset.org/zips/val2014.zip
 
-unzip unlabeled2017.zip > /dev/null
-rm unlabeled2017.zip
+unzip val2014.zip > /dev/null
+rm val2014.zip

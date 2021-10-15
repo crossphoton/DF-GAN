@@ -7,7 +7,7 @@ setup: get-metadata get-encoders get-datasets
 get-metadata: scripts/get-metadata.sh
 	cd scripts && bash get-metadata.sh
 
-get-metadata: scripts/get-datasets.sh
+get-datasets: scripts/get-datasets.sh
 	cd scripts && bash get-datasets.sh
 
 get-encoders: scripts/get-encoders.sh

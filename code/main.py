@@ -100,7 +100,18 @@ def sampling(text_encoder, netG, dataloader, device):
                 im.save(fullpath)
 
 
+def loadCheckpoint(netG, netD, optimizerG, optimizerD):
+    epoch = 0
+    if(os.path.isfile('models/%s/optimizers.pth' % (cfg.CONFIG_NAME))):
+        checkpoint = torch.load('models/%s/optimizers.pth' % (cfg.CONFIG_NAME))
+        epoch = checkpoint['epoch']
+        netG.load_state_dict('models/%s/netG_%03d.pth' % (cfg.CONFIG_NAME, epoch))
+        netD.load_state_dict('models/%s/netD_%03d.pth' % (cfg.CONFIG_NAME, epoch))
+
+    return netG, netD, optimizerG, optimizerD, epoch
+
 def train(dataloader, netG, netD, text_encoder, optimizerG, optimizerD, state_epoch, batch_size, device):
+    netG, netD, optimizerG, optimizerD, state_epoch = loadCheckpoint(netG, netD, optimizerG, optimizerD)
     for epoch in range(state_epoch+1, cfg.TRAIN.MAX_EPOCH+1):
         for step, data in enumerate(dataloader, 0):
 
