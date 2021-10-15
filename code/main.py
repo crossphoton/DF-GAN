@@ -105,13 +105,18 @@ def loadCheckpoint(netG, netD, optimizerG, optimizerD):
     if(os.path.isfile('models/%s/optimizers.pth' % (cfg.CONFIG_NAME))):
         checkpoint = torch.load('models/%s/optimizers.pth' % (cfg.CONFIG_NAME))
         epoch = checkpoint['epoch']
-        netG.load_state_dict('models/%s/netG_%03d.pth' % (cfg.CONFIG_NAME, epoch))
-        netD.load_state_dict('models/%s/netD_%03d.pth' % (cfg.CONFIG_NAME, epoch))
+        print("starting from epoch: %d" % (epoch))
+        netG.load_state_dict(torch.load('models/%s/netG_%03d.pth' % (cfg.CONFIG_NAME,
+                             epoch), map_location=torch.device("cuda" if cfg.CUDA else "cpu")))
+        netD.load_state_dict(torch.load('models/%s/netD_%03d.pth' % (cfg.CONFIG_NAME,
+                             epoch), map_location=torch.device("cuda" if cfg.CUDA else "cpu")))
 
     return netG, netD, optimizerG, optimizerD, epoch
 
+
 def train(dataloader, netG, netD, text_encoder, optimizerG, optimizerD, state_epoch, batch_size, device):
-    netG, netD, optimizerG, optimizerD, state_epoch = loadCheckpoint(netG, netD, optimizerG, optimizerD)
+    netG, netD, optimizerG, optimizerD, state_epoch = loadCheckpoint(
+        netG, netD, optimizerG, optimizerD)
     for epoch in range(state_epoch+1, cfg.TRAIN.MAX_EPOCH+1):
         for step, data in enumerate(dataloader, 0):
 
@@ -190,10 +195,11 @@ def train(dataloader, netG, netD, text_encoder, optimizerG, optimizerD, state_ep
         if epoch % 10 == 0:
             checkpoint = {
                 'epoch': epoch,
-                'optimizerD' : optimizerD.state_dict(),
-                'optimizerG' : optimizerG.state_dict()
+                'optimizerD': optimizerD.state_dict(),
+                'optimizerG': optimizerG.state_dict()
             }
-            torch.save(checkpoint, 'models/%s/optimizers.pth' % (cfg.CONFIG_NAME))
+            torch.save(checkpoint, 'models/%s/optimizers.pth' %
+                       (cfg.CONFIG_NAME))
             torch.save(netG.state_dict(), 'models/%s/netG_%03d.pth' %
                        (cfg.CONFIG_NAME, epoch))
             torch.save(netD.state_dict(), 'models/%s/netD_%03d.pth' %
